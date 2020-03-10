@@ -73,9 +73,39 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin'], fu
             Route::get('/{id}/edit', 'ProductController@edit')->name('edit');
             Route::post('/', 'ProductController@store')->name('store');
             Route::post('/datatables', 'ProductController@dataTable')->name('datatables');
+            Route::post('/datatables_sale', 'ProductController@dataTableForSale')->name('datatables_forsale');
             Route::put('/{id}', 'ProductController@update')->name('update');
             Route::delete('/{id}', 'ProductController@destroy')->name('destroy');
         });
+
+        // Master Customer
+        Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
+            // Route::get('/', 'CustomerController@index')->name('index');
+            // Route::get('/{id}/show', 'CustomerController@show')->name('show');
+            // Route::get('/create', 'CustomerController@create')->name('create');
+            // Route::get('/{id}/edit', 'CustomerController@edit')->name('edit');
+            Route::post('/getbyid', 'CustomerController@getByID')->name('getbyid');
+            // Route::post('/', 'CustomerController@store')->name('store');
+            // Route::post('/datatables', 'CustomerController@dataTable')->name('datatables');
+            // Route::put('/{id}', 'CustomerController@update')->name('update');
+            // Route::delete('/{id}', 'CustomerController@destroy')->name('destroy');
+        });
+
+        // Transaction Sale
+        Route::group(['prefix' => 'transaction/sale', 'as' => 'transaction.sale.'], function () {
+            Route::get('/', 'SaleController@index')->name('index');
+                // Route::get('/{id}/show', 'SaleController@show')->name('show');
+            Route::get('/create', 'SaleController@create')->name('create');
+                // Route::get('/{id}/edit', 'SaleController@edit')->name('edit');
+            Route::get('/tmpdetail', 'SaleController@getTableTmpDetail')->name('gettable_tmpdetail');
+                // Route::post('/', 'SaleController@store')->name('store');
+            Route::post('/tmpdetail', 'SaleController@storeTmpDetail')->name('store_tmpdetail');
+                // Route::post('/datatables', 'SaleController@dataTable')->name('datatables');
+                // Route::put('/{id}', 'SaleController@update')->name('update');
+                // Route::delete('/{id}', 'SaleController@destroy')->name('destroy');
+            Route::delete('/{id}/tmpdetail', 'SaleController@destroyTmpDetail')->name('destroy_tmpdetail');
+        });
+
 
     });
 

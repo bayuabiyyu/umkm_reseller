@@ -47,7 +47,7 @@ class UnitService
      *
      * @return bool
      */
-    public function create(Request $request)
+    public function create($request)
     {
         $data = [
             'unit_code' => $request->input('unit_code'),

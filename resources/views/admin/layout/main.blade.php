@@ -22,7 +22,8 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   @stack('css')
 </head>
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+{{-- Transaction = Hide Sidebar --}}
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed {{ request()->segment(2) == "transaction" ? "sidebar-collapse" : "" }}">
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -231,7 +232,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link"> &nbsp;
+                <a href="{{ route('admin.transaction.sale.index') }}" class="nav-link"> &nbsp;
                   <i class="far fa-circle nav-icon"></i>
                   <p>Sales / Direct</p>
                 </a>

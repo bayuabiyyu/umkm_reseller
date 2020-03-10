@@ -3,22 +3,22 @@
 namespace App\Services\Admin;
 
 use Illuminate\Http\Request;
-use App\Models\Supplier;
+use App\Models\Customer;
 use Yajra\DataTables\Facades\DataTables;
 
-class SupplierService
+class CustomerService
 {
 
-    private $supplier;
+    private $customer;
 
     /**
      * Init class
      *
      * @return void
      */
-    public function __construct(supplier $supplier)
+    public function __construct(Customer $customer)
     {
-        $this->supplier = $supplier;
+        $this->customer = $customer;
     }
 
     /**
@@ -28,7 +28,7 @@ class SupplierService
      */
     public function getAll()
     {
-        return $this->supplier->get();
+        return $this->customer->get();
     }
 
     /**
@@ -38,7 +38,7 @@ class SupplierService
      */
     public function getByID($id)
     {
-        return $this->supplier->where('id', $id)
+        return $this->customer->where('id', $id)
             ->first();
     }
 
@@ -50,16 +50,12 @@ class SupplierService
     public function create($request)
     {
         $data = [
-            'supplier_code' => $request->input('supplier_code'),
-            'supplier_name' => $request->input('supplier_name'),
-            'phone_number' => $request->input('phone_number'),
-            'address' => $request->input('address'),
-            'city' => $request->input('city'),
-            'owner' => $request->input('owner'),
+            'customer_code' => $request->input('customer_code'),
+            'customer_name' => $request->input('customer_name'),
             'created_by' => auth('admin')->user()->id,
             'updated_by' => auth('admin')->user()->id,
         ];
-        $create = $this->supplier->create($data);
+        $create = $this->customer->create($data);
         return $create;
     }
 
@@ -70,7 +66,7 @@ class SupplierService
      */
     public function delete($id)
     {
-        $delete = $this->supplier->where('id', $id)
+        $delete = $this->customer->where('id', $id)
                     ->delete();
         return $delete;
     }
@@ -83,15 +79,9 @@ class SupplierService
     public function update($id, $request)
     {
         $data = [
-            'supplier_name' => $request->input('supplier_name'),
-            'phone_number' => $request->input('phone_number'),
-            'address' => $request->input('address'),
-            'city' => $request->input('city'),
-            'owner' => $request->input('owner'),
-            'created_by' => auth('admin')->user()->id,
-            'updated_by' => auth('admin')->user()->id,
+            'customer_name' => $request->input('customer_name')
         ];
-        $update = $this->supplier->where('id', $id)
+        $update = $this->customer->where('id', $id)
                     ->update($data);
         return $update;
     }
@@ -106,8 +96,8 @@ class SupplierService
         $data = $this->getAll();
         $generate = Datatables::of($data)
                     ->addColumn('action', function($data){
-                        $btnEdit = '<a href="'.route('admin.supplier.edit', $data->id).'" id="btn_edit" class="btn btn-sm btn-primary" title="Edit"> <i class="fas fa-edit"> </i> Edit</a>';
-                        $btnDelete = '<a href="'.route('admin.supplier.destroy', $data->id).'" id="btn_delete" class="btn btn-sm btn-danger" title="Delete"> <i class="fas fa-trash"> </i> Delete</a>';
+                        $btnEdit = '<a href="'.route('admin.customer.edit', $data->id).'" id="btn_edit" class="btn btn-sm btn-primary" title="Edit"> <i class="fas fa-edit"> </i> Edit</a>';
+                        $btnDelete = '<a href="'.route('admin.customer.destroy', $data->id).'" id="btn_delete" class="btn btn-sm btn-danger" title="Delete"> <i class="fas fa-trash"> </i> Delete</a>';
                         return $btnEdit. " &nbsp; " .$btnDelete;
                     })
                     ->addIndexColumn()

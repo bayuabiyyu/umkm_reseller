@@ -195,5 +195,29 @@ class ProductService
         return $generate;
     }
 
+        /**
+     * Datatables service yajra
+     *
+     * @return datatables
+     */
+    public function generateDatatableForSale($request)
+    {
+        $data = $this->getAll();
+        $generate = Datatables::of($data)
+                    ->addColumn('action', function($data){
+                        $btnPilih = '<a href="#" id="btn_pilih" class="btn_pilih btn btn-sm btn-primary" title="Choose"> <i class="fas fa-check"> </i> Choose</a>';
+                        return $btnPilih;
+                    })
+                    ->editColumn('image', function($data){
+                        $path = Storage::url($data->image);
+                        return Storage::exists($data->image) ? '<a target="_blank" href="'. $path .'"> <img src="'. $path .'" height="42" width="42"> </a>' : '<span class="badge badge-info"> Not Found </span>';
+                    })
+                    ->addIndexColumn()
+                    ->removeColumn(['created_at', 'updated_at', 'created_by', 'updated_by'])
+                    ->rawColumns(['image', 'action'])
+                    ->make(true);
+        return $generate;
+    }
+
 
 }

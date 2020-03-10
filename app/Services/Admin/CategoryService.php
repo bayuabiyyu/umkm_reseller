@@ -47,7 +47,7 @@ class CategoryService
      *
      * @return bool
      */
-    public function create(Request $request)
+    public function create($request)
     {
         $data = [
             'category_code' => $request->input('category_code'),

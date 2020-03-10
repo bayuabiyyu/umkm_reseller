@@ -4,26 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Services\Admin\ProductService;
-use App\Services\Admin\UnitService;
-use App\Services\Admin\CategoryService;
-use App\Http\Requests\Admin\ProductRequest;
+use App\Services\Admin\CustomerService;
+use App\Http\Requests\Admin\CustomerRequest;
 
-class ProductController extends Controller
+class CustomerController extends Controller
 {
 
-    private $productService, $unitService, $categoryService;
+    private $customerService;
 
     /**
      * Init class
      *
      * @return void
      */
-    public function __construct(ProductService $productService, UnitService $unitService, CategoryService $categoryService)
+    public function __construct(CustomerService $customerService)
     {
-        $this->productService = $productService;
-        $this->unitService = $unitService;
-        $this->categoryService = $categoryService;
+        $this->customerService = $customerService;
     }
 
     /**
@@ -33,8 +29,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // dd($this->productService->getByID(14));
-        return view('admin.master.product.index');
+        return view('admin.master.customer.index');
     }
 
     /**
@@ -44,9 +39,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $data['unit'] = $this->unitService->getAll();
-        $data['category'] = $this->categoryService->getAll();
-        return view('admin.master.product.form_add', compact('data'));
+        return view('admin.master.customer.form_add');
     }
 
     /**
@@ -55,9 +48,9 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(CustomerRequest $request)
     {
-        $create = $this->productService->create($request);
+        $create = $this->customerService->create($request);
         if($create){
             $response = [
                 'success' => true,
@@ -73,7 +66,6 @@ class ProductController extends Controller
             ];
         }
         return response()->json($response, $response['code']);
-
     }
 
     /**
@@ -95,10 +87,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $data['product'] = $this->productService->getByID($id);
-        $data['unit'] = $this->unitService->getAll();
-        $data['category'] = $this->categoryService->getAll();
-        return view('admin.master.product.form_edit', compact('data'));
+        $data = $this->customerService->getByID($id);
+        return view('admin.master.customer.form_edit', compact('data'));
     }
 
     /**
@@ -108,9 +98,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
-        $update = $this->productService->update($id, $request);
+        $update = $this->customerService->update($id, $request);
         if($update){
             $response = [
                 'success' => true,
@@ -136,15 +126,14 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $delete = $this->productService->delete($id);
+        $delete = $this->customerService->delete($id);
         if($delete){
             $response = [
                 'success' => true,
                 'message' => "Data berhasil dihapus",
                 'code' => 200
             ];
-        }
-        else{
+        }else{
             $response = [
                 'success' => false,
                 'message' => "Error Execution",
@@ -163,20 +152,35 @@ class ProductController extends Controller
      */
     public function dataTable(Request $request)
     {
-        $datatable = $this->productService->generateDatatable($request);
+        $datatable = $this->customerService->generateDatatable($request);
         return $datatable;
     }
 
     /**
-     * Datatables yajra function for sale
+     * Get all customer
      *
-     * @param \Illuminate\Http\Request  $request
-     * @return datatables
+     * @return json
      */
-    public function dataTableForSale(Request $request)
+    public function getByID(Request $request)
     {
-        $datatable = $this->productService->generateDatatableForSale($request);
-        return $datatable;
+        $id = $request->input('customer_id');
+        $data = $this->customerService->getByID($id);
+        if( !is_null($data) ){
+            $response = [
+                'success' => true,
+                'message' => "Data berhasil terima",
+                'data' => $data,
+                'code' => 200
+            ];
+        }else{
+            $response = [
+                'success' => false,
+                'message' => "Error Execution",
+                'errors' => ["Data gagal diterima"],
+                'code' => 422
+            ];
+        }
+        return response()->json($response, $response['code']);
     }
 
 }
